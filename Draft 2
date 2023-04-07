@@ -1,0 +1,25 @@
+# Define a function to calculate the index value for a given country and year
+def calculate_index(country, year):
+    # Create an empty list to store the indicator values
+    values = []
+    # Loop through each indicator
+    for indicator in indicators:
+        # Define the API endpoint for the indicator
+        url = f"https://api.worldbank.org/v2/country/{country}/indicator/{indicator}?date={year}&format=json"
+        # Make a GET request to the API and get the response
+        response = requests.get(url)
+        # Check if the response is successful
+        if response.status_code == 200:
+            # Parse the response as JSON and get the data
+            data = response.json()
+            # Get the indicator value from the data
+            value = data[1][0]["value"]
+            # Append the value to the list
+            values.append(value)
+        else:
+            # Print an error message and return None
+            print(f"Error: Could not get data for {indicator} from API")
+            return None
+    # Calculate the index value as the average of the indicator values
+    index = sum(values) / len(values)
+    # Return the index value
